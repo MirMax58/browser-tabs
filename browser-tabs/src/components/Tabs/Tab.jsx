@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-export default function Tab({ tab, onPin }) {
+export default function Tab({ tab, onPin, onClose }) {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: tab.id });
 
@@ -22,7 +22,18 @@ export default function Tab({ tab, onPin }) {
           isActive ? "tabs__item active" : "tabs__item"
         }
       >
-        {tab.title}
+        <span className="tab-title">{tab.title}</span>
+
+        <button
+          className="close-tab"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onClose(tab.id);
+          }}
+        >
+          ×
+        </button>
         <button
           onClick={(e) => {
             e.preventDefault();

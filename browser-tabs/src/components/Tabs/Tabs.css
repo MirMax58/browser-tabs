@@ -133,3 +133,27 @@ body {
 .drag-handle:active {
   cursor: grabbing;
 }
+
+/* close-tab */
+
+.close-tab {
+  margin-left: auto;
+  border: none;
+  background: transparent;
+  color: #9aa0a6;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 2px 5px;
+  border-radius: 50%;
+}
+
+.close-tab:hover {
+  background: #5f6368;
+  color: white;
+}
+
+.dropdown-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

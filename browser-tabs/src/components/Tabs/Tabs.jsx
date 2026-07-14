@@ -180,6 +180,10 @@ export default function Tabs() {
     };
   }, [tabs]);
 
+  function handleClose(id) {
+    setTabs((items) => items.filter((tab) => tab.id !== id));
+  }
+
   return (
     <DndContext collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
       <SortableContext
@@ -189,13 +193,23 @@ export default function Tabs() {
         <div className="tabs-container">
           <div className="measure-tabs">
             {sortedTabs.map((tab) => (
-              <Tab key={tab.id} tab={tab} onPin={handlePin} />
+              <Tab
+                key={tab.id}
+                tab={tab}
+                onPin={handlePin}
+                onClose={handleClose}
+              />
             ))}
           </div>
 
           <div className="tabs" ref={containerRef}>
             {visibleTabs.map((tab) => (
-              <Tab key={tab.id} tab={tab} onPin={handlePin} />
+              <Tab
+                key={tab.id}
+                tab={tab}
+                onPin={handlePin}
+                onClose={handleClose}
+              />
             ))}
           </div>
           {hideTabs.length > 0 && (
@@ -207,7 +221,13 @@ export default function Tabs() {
             <div className="dropdown">
               {hideTabs.map((tab) => (
                 <div key={tab.id} className="dropdown-item">
-                  {tab.title}
+                  <span>{tab.title}</span>
+                  <button
+                    className="close-tab"
+                    onClick={() => handleClose(tab.id)}
+                  >
+                    ×
+                  </button>
                 </div>
               ))}
             </div>
