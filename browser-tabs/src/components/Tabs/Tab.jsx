@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-export default function Tab({ tab }) {
+export default function Tab({ tab, onPin }) {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: tab.id });
 
@@ -23,6 +23,15 @@ export default function Tab({ tab }) {
         }
       >
         {tab.title}
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation;
+            onPin(tab.id);
+          }}
+        >
+          {tab.pinned ? "📌" : "📍"}
+        </button>
       </NavLink>
     </div>
   );

@@ -120,15 +120,28 @@ export default function Tabs() {
     }
   }
 
+  function handlePin(id) {
+    setTabs((items) =>
+      items.map((tab) =>
+        tab.id === id ? { ...tab, pinned: !tab.pinned } : tab,
+      ),
+    );
+  }
+
+  const sortedTabs = [
+    ...tabs.filter((tab) => tab.pinned),
+    ...tabs.filter((tab) => !tab.pinned),
+  ];
+
   return (
     <DndContext collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
       <SortableContext
-        items={tabs.map((tab) => tab.id)}
+        items={sortedTabs.map((tab) => tab.id)}
         strategy={horizontalListSortingStrategy}
       >
         <div className="tabs">
-          {tabs.map((tab) => (
-            <Tab key={tab.id} tab={tab} />
+          {sortedTabs.map((tab) => (
+            <Tab key={tab.id} tab={tab} onPin={handlePin} />
           ))}
         </div>
       </SortableContext>
