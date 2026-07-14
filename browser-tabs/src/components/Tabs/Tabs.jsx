@@ -7,7 +7,7 @@ import { arrayMove } from "@dnd-kit/sortable";
 
 import Tab from "./Tab";
 import "./Tabs.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export const initialtabs = [
   {
@@ -102,6 +102,13 @@ export default function Tabs() {
     return savedTabs ? JSON.parse(savedTabs) : initialtabs;
   });
 
+  const [visibleTabs, setVisibleTabs] = useState(initialtabs);
+  const [hideTabs, setHideTabs] = useState([]);
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const containerRef = useRef(null);
+
   useEffect(() => {
     localStorage.setItem("tabs", JSON.stringify(tabs));
   }, [tabs]);
@@ -133,16 +140,78 @@ export default function Tabs() {
     ...tabs.filter((tab) => !tab.pinned),
   ];
 
+  function calculateTabs() {
+    const container = containerRef.current;
+    const measureContainer = document.querySelector(".measure-tabs");
+
+    if (!container || !measureContainer) return;
+
+    const containerWidth = container.offsetWidth;
+
+    const tabElements = measureContainer.querySelectorAll(".tabs__item");
+
+    let totalWidth = 0;
+
+    const visible = [];
+    const hidden = [];
+
+    tabElements.forEach((element, index) => {
+      const width = element.offsetWidth + 10;
+
+      if (totalWidth + width < containerWidth - 90) {
+        visible.push(sortedTabs[index]);
+        totalWidth += width;
+      } else {
+        hidden.push(sortedTabs[index]);
+      }
+    });
+
+    setVisibleTabs(visible);
+    setHideTabs(hidden);
+  }
+
+  useEffect(() => {
+    calculateTabs();
+
+    window.addEventListener("resize", calculateTabs);
+
+    return () => {
+      window.removeEventListener("resize", calculateTabs);
+    };
+  }, [tabs]);
+
   return (
     <DndContext collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
       <SortableContext
         items={sortedTabs.map((tab) => tab.id)}
         strategy={horizontalListSortingStrategy}
       >
-        <div className="tabs">
-          {sortedTabs.map((tab) => (
-            <Tab key={tab.id} tab={tab} onPin={handlePin} />
-          ))}
+        <div className="tabs-container">
+          <div className="measure-tabs">
+            {sortedTabs.map((tab) => (
+              <Tab key={tab.id} tab={tab} onPin={handlePin} />
+            ))}
+          </div>
+
+          <div className="tabs" ref={containerRef}>
+            {visibleTabs.map((tab) => (
+              <Tab key={tab.id} tab={tab} onPin={handlePin} />
+            ))}
+          </div>
+          {hideTabs.length > 0 && (
+            <button className="hide-button" onClick={() => setIsOpen(!isOpen)}>
+              More ▼
+            </button>
+          )}
+          {isOpen && hideTabs.length > 0 && (
+            <div className="dropdown">
+              {hideTabs.map((tab) => (
+                <div key={tab.id} className="dropdown-item">
+                  {tab.title}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </SortableContext>
     </DndContext>

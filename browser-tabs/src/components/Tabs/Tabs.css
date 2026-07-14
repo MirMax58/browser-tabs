@@ -2,9 +2,22 @@
   display: flex;
   gap: 10px;
   padding: 15px;
-  overflow-x: auto;
+  overflow: hidden;
   border-bottom: 1px solid #ddd;
   align-items: center;
+  flex: 1;
+}
+
+.tabs-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.hide-button {
+  flex-shrink: 0;
+  margin-left: 10px;
 }
 
 .tab-wraper {
@@ -23,6 +36,13 @@
   transition: 0.2s;
 }
 
+.measure-tabs {
+  position: absolute;
+  visibility: hidden;
+  display: flex;
+  gap: 10px;
+}
+
 .tabs__item:hover {
   background: #ddd;
 }
@@ -32,10 +52,33 @@
   color: white;
 }
 
+/* Drag-drop */
 .drag-handle {
   cursor: pointer;
 }
 
 .drag-handle:active {
   cursor: grabbing;
+}
+
+/* Drop-down */
+.dropdown {
+  position: absolute;
+  top: 55px;
+  right: 10px;
+
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+
+  padding: 8px;
+}
+
+.dropdown-item {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background: #f2f2f2;
 }
