@@ -21,3 +21,8 @@
 .tabs__item:hover {
   background: #ddd;
 }
+
+.tabs__item.active {
+  background-color: black;
+  color: white;
+}
