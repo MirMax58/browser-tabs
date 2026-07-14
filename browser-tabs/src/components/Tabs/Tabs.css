@@ -1,0 +1,23 @@
+.tabs {
+  display: flex;
+  gap: 10px;
+  padding: 15px;
+
+  border-bottom: 1px solid #ddd;
+}
+
+.tabs__item {
+  padding: 8px 16px;
+
+  text-decoration: none;
+  color: black;
+
+  background: #eee;
+  border-radius: 8px;
+
+  transition: 0.2s;
+}
+
+.tabs__item:hover {
+  background: #ddd;
+}
