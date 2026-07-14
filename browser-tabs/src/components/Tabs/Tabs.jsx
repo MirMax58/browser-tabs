@@ -1,3 +1,10 @@
+import { DndContext, closestCorners } from "@dnd-kit/core";
+import {
+  SortableContext,
+  horizontalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { arrayMove } from "@dnd-kit/sortable";
+
 import Tab from "./Tab";
 import "./Tabs.css";
 import { useState } from "react";
@@ -91,12 +98,32 @@ export const initialtabs = [
 
 export default function Tabs() {
   const [tabs, setTabs] = useState(initialtabs);
+  function handleDragEnd(event) {
+    const { active, over } = event;
+    if (!over) return;
+    if (active.id !== over.id) {
+      setTabs((items) => {
+        const prevIndex = items.findIndex((item) => item.id === active.id);
+
+        const newIndex = items.findIndex((item) => item.id === over.id);
+
+        return arrayMove(items, prevIndex, newIndex);
+      });
+    }
+  }
 
   return (
-    <div className="tabs">
-      {tabs.map((tab) => (
-        <Tab key={tab.id} tab={tab} />
-      ))}
-    </div>
+    <DndContext collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
+      <SortableContext
+        items={tabs.map((tab) => tab.id)}
+        strategy={horizontalListSortingStrategy}
+      >
+        <div className="tabs">
+          {tabs.map((tab) => (
+            <Tab key={tab.id} tab={tab} />
+          ))}
+        </div>
+      </SortableContext>
+    </DndContext>
   );
 }
