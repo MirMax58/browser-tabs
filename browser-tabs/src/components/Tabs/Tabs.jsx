@@ -7,7 +7,7 @@ import { arrayMove } from "@dnd-kit/sortable";
 
 import Tab from "./Tab";
 import "./Tabs.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export const initialtabs = [
   {
@@ -97,7 +97,15 @@ export const initialtabs = [
 ];
 
 export default function Tabs() {
-  const [tabs, setTabs] = useState(initialtabs);
+  const [tabs, setTabs] = useState(() => {
+    const savedTabs = localStorage.getItem("tabs");
+    return savedTabs ? JSON.parse(savedTabs) : initialtabs;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("tabs", JSON.stringify(tabs));
+  }, [tabs]);
+
   function handleDragEnd(event) {
     const { active, over } = event;
     if (!over) return;
